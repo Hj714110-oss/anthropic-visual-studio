@@ -1,6 +1,6 @@
 # Public and local assets
 
-The public library has three original MIT examples: `STUDIO-thought`, `STUDIO-growth`, `STUDIO-connection`. They are newly authored geometric examples, not Anthropic illustrations or archive reconstructions.
+The public library has six original MIT figurative illustrations: `STUDIO-thinking`, `STUDIO-connection`, `STUDIO-growth`, `STUDIO-thought`, `STUDIO-reading`, `STUDIO-dialogue`. These are newly drawn project examples, not Anthropic originals or archive reconstructions. Complete themed posters are in `examples/posters/`; original artwork remains in `assets/library/originals/`.
 
 `assets/library/catalog.json` records actual SVG paths, source hashes and license. `assets/prepared/` contains recolorable forms using `__INK__`, `__PAPER__`, `__ACCENT__`. The scaffold copies used original files and writes `sources.json`.
 

@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
- p.add_argument('--out',required=True);p.add_argument('--title',default='让想法，自在生长。');p.add_argument('--subtitle',default='从一笔墨线开始，把思考变成可以触碰的形状。');p.add_argument('--asset',default='STUDIO-thought');p.add_argument('--motion',choices=['none','gentle','expressive'],default='gentle')
+ p.add_argument('--out',required=True);p.add_argument('--title',default='Make room\nfor wonder.');p.add_argument('--subtitle',default='给好奇心，留一点空间。');p.add_argument('--asset',default='STUDIO-thinking');p.add_argument('--motion',choices=['none','gentle','expressive'],default='gentle')
  args=p.parse_args();out=Path(args.out).resolve()
  if out.exists():p.error('Output already exists; choose a new directory. Existing projects must be edited in place.')
  curated=[]
@@ -18,7 +18,7 @@ def main():
     a['_base']=str(base);curated.append(a)
  selected=next((a for a in curated if a['id']==args.asset),None)
  if selected is None:p.error('--asset must be an available prepared ID. Use catalog.py to discover; use other archive assets manually after inspection.')
- ids=list(dict.fromkeys([args.asset,'STUDIO-connection','STUDIO-growth']))
+ ids=list(dict.fromkeys([args.asset,'STUDIO-thinking','STUDIO-connection','STUDIO-growth','STUDIO-thought','STUDIO-reading','STUDIO-dialogue']))
  archive=records()
  out.mkdir(parents=True);(out/'sources').mkdir();(out/'fonts').mkdir()
  for name in ['index.html','styles.css','app.js']:shutil.copy2(ROOT/'assets/starter'/name,out/name)

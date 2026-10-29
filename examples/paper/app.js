@@ -1,0 +1,6 @@
+
+const tabs=Array.from(document.querySelectorAll('[data-tab]'));
+function activate(tab){tabs.forEach(t=>{const active=t===tab;t.setAttribute('aria-selected',active);t.tabIndex=active?0:-1;document.querySelector('#panel-'+t.dataset.tab).hidden=!active;});}
+tabs.forEach((tab,i)=>{tab.onclick=()=>activate(tab);tab.onkeydown=e=>{let n;if(e.key==='ArrowRight')n=(i+1)%tabs.length;if(e.key==='ArrowLeft')n=(i+tabs.length-1)%tabs.length;if(e.key==='Home')n=0;if(e.key==='End')n=tabs.length-1;if(n!==undefined){e.preventDefault();activate(tabs[n]);tabs[n].focus();}};});
+let dialogue=false;document.querySelector('#figure-switch').onclick=()=>{dialogue=!dialogue;document.querySelector('#research-figure').src='../shared/STUDIO-'+(dialogue?'dialogue':'thinking')+'.svg';document.querySelector('#research-figure').alt=dialogue?'交流对话的原创矢量插画':'独立思考的原创矢量插画';document.querySelector('#figure-label').textContent='FIG. 02 / '+(dialogue?'交流与连接':'独立思考');document.querySelector('#figure-switch').textContent='切换到「'+(dialogue?'思考':'对话')+'」 ↔';document.querySelector('#figure-caption').textContent=dialogue?'不同的观点彼此接近，让一个问题获得新的可能。':'一个问题，先在一个人的脑海中获得形状。点击切换，观察从独立思考到交流的视觉变化。';};
+document.querySelector('#download-citation').onclick=()=>downloadText('form-thought-design-demo.bib',document.querySelector('#citation-text').textContent,'application/x-bibtex');

@@ -1,6 +1,6 @@
 # Third-party materials
 
-This public repository contains original project code, guidance, and three new geometric SVG examples under MIT. It does not contain Anthropic's illustration archive, traced derivatives of those illustrations, or the three proprietary font files from the private research bundle. They are not relicensed by this repository.
+This public repository contains original project code, guidance, six newly drawn figurative SVG illustrations, six themed poster compositions, and three application examples under MIT. It does not contain Anthropic's illustration archive, traced derivatives of those illustrations, or the three proprietary font files from the private research bundle. They are not relicensed by this repository.
 
 Anthropic and Claude names identify the visual reference, not affiliation, sponsorship, or trademark permission. The example page is an independent design study. The default palette and rules are interpretations, not official tokens.
 

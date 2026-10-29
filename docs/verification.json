@@ -1,9 +1,205 @@
 {
-  "date": "2026-10-29",
-  "script_tests": 5,
-  "public_browser_checks": 28,
-  "local_import_browser_checks": 28,
-  "browser": "Microsoft Edge, Windows, offline",
-  "public_source_assets": 3,
-  "private_assets_published": false
+  "version": "0.2.0",
+  "platform": "Windows / Edge, offline",
+  "standard_library_tests": 5,
+  "workbench": {
+    "body_has_content": {
+      "passed": true,
+      "detail": null
+    },
+    "desktop_no_overflow": {
+      "passed": true,
+      "detail": null
+    },
+    "visible_images_loaded": {
+      "passed": true,
+      "detail": null
+    },
+    "declared_fonts_loaded": {
+      "passed": true,
+      "detail": null
+    },
+    "hero_has_real_vector_paths": {
+      "passed": true,
+      "detail": null
+    },
+    "motion_changes_or_is_explicitly_disabled": {
+      "passed": true,
+      "detail": {
+        "before": "matrix(0.999994, 0.00343221, -0.00343221, 0.999994, 0, -4.13876)",
+        "after": "matrix(0.999986, 0.00522504, -0.00522504, 0.999986, 0, -4.99479)",
+        "configured": "gentle"
+      }
+    },
+    "pause_stops_animation": {
+      "passed": true,
+      "detail": null
+    },
+    "resume_restarts_animation": {
+      "passed": true,
+      "detail": null
+    },
+    "pointer_updates_art_position": {
+      "passed": true,
+      "detail": null
+    },
+    "navigation_scrolls_to_section": {
+      "passed": true,
+      "detail": null
+    },
+    "all_illustrations_change_state_and_shapes": {
+      "passed": true,
+      "detail": [
+        "STUDIO-thinking",
+        "STUDIO-connection",
+        "STUDIO-growth",
+        "STUDIO-thought",
+        "STUDIO-reading",
+        "STUDIO-dialogue"
+      ]
+    },
+    "palette_changes_real_vector_fills": {
+      "passed": true,
+      "detail": null
+    },
+    "keyboard_activates_palette": {
+      "passed": true,
+      "detail": null
+    },
+    "palette_preserves_keyboard_focus": {
+      "passed": true,
+      "detail": null
+    },
+    "title_and_subtitle_update_live": {
+      "passed": true,
+      "detail": null
+    },
+    "scale_changes_actual_transform": {
+      "passed": true,
+      "detail": null
+    },
+    "texture_toggle_removes_grain": {
+      "passed": true,
+      "detail": null
+    },
+    "guides_toggle_shows_overlay": {
+      "passed": true,
+      "detail": null
+    },
+    "poster_export_has_editable_text_and_vectors": {
+      "passed": true,
+      "detail": null
+    },
+    "poster_export_preserves_escaped_input": {
+      "passed": true,
+      "detail": null
+    },
+    "poster_export_renders_in_browser": {
+      "passed": true,
+      "detail": null
+    },
+    "reset_restores_entire_design": {
+      "passed": true,
+      "detail": null
+    },
+    "download_is_real_editable_svg": {
+      "passed": true,
+      "detail": {
+        "file": "STUDIO-thinking-study.svg",
+        "bytes": 1959
+      }
+    },
+    "export_has_no_color_placeholders": {
+      "passed": true,
+      "detail": null
+    },
+    "source_dialog_displays_real_original": {
+      "passed": true,
+      "detail": null
+    },
+    "escape_closes_dialog": {
+      "passed": true,
+      "detail": null
+    },
+    "dialog_restores_keyboard_focus": {
+      "passed": true,
+      "detail": null
+    },
+    "scroll_reveals_design_notes": {
+      "passed": true,
+      "detail": null
+    },
+    "mobile_390_no_overflow": {
+      "passed": true,
+      "detail": null
+    },
+    "mobile_360_no_overflow": {
+      "passed": true,
+      "detail": null
+    },
+    "reduced_motion_disables_animation": {
+      "passed": true,
+      "detail": null
+    },
+    "reduced_motion_preserves_interaction": {
+      "passed": true,
+      "detail": null
+    },
+    "no_javascript_errors": {
+      "passed": true,
+      "detail": []
+    },
+    "no_console_errors": {
+      "passed": true,
+      "detail": []
+    },
+    "no_failed_resources": {
+      "passed": true,
+      "detail": []
+    },
+    "zero_network_requests": {
+      "passed": true,
+      "detail": []
+    }
+  },
+  "applications": {
+    "paper_all_images_loaded": true,
+    "paper_desktop_no_overflow": true,
+    "article_all_images_loaded": true,
+    "article_desktop_no_overflow": true,
+    "garden_all_images_loaded": true,
+    "garden_desktop_no_overflow": true,
+    "paper_tabs_change_visible_content": true,
+    "paper_tabs_keyboard_navigation": true,
+    "paper_figure_switch_changes_real_asset": true,
+    "paper_method_expands": true,
+    "paper_downloads_truthful_bibtex": true,
+    "article_font_control_changes_text": true,
+    "article_reading_preferences_persist": true,
+    "article_reading_progress_tracks_scroll": true,
+    "article_font_limit_is_enforced": true,
+    "garden_initial_examples_present": true,
+    "garden_adds_safe_text_card": true,
+    "garden_advances_stage_and_counts": true,
+    "garden_filter_selects_stage": true,
+    "garden_created_note_and_stage_persist": true,
+    "garden_completes_note": true,
+    "garden_download_matches_saved_data": true,
+    "garden_motion_actually_moves": true,
+    "garden_pause_stops_motion": true,
+    "paper_390_no_overflow": true,
+    "paper_360_no_overflow": true,
+    "paper_reduced_motion_css": true,
+    "article_390_no_overflow": true,
+    "article_360_no_overflow": true,
+    "article_reduced_motion_css": true,
+    "garden_390_no_overflow": true,
+    "garden_360_no_overflow": true,
+    "garden_reduced_motion_css": true,
+    "garden_reduced_motion_disables_animation": true,
+    "no_javascript_or_console_errors": true,
+    "zero_network_requests": true,
+    "no_failed_resources": true
+  },
+  "scope": "Checked current examples; not a universal product acceptance or pixel-identity claim."
 }
