@@ -1,0 +1,12 @@
+assets/local/
+__pycache__/
+*.pyc
+.env
+.env.*
+.venv/
+output/
+qa/
+*.zip
+*.ttf
+*.otf
+*.woff*

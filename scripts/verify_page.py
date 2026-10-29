@@ -1,0 +1,83 @@
+"""Exercise a standalone HTML page offline in a real browser. Requires Playwright."""
+from pathlib import Path
+import argparse,json,sys,xml.etree.ElementTree as ET
+
+def main():
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('page');p.add_argument('--out',required=True);p.add_argument('--starter',action='store_true');p.add_argument('--channel',default='msedge')
+ args=p.parse_args();entry=Path(args.page).resolve();out=Path(args.out).resolve();out.mkdir(parents=True,exist_ok=True)
+ result={'entry':str(entry),'mode':'offline','checks':{},'console_errors':[],'page_errors':[],'network_requests':[],'failed_requests':[]}
+ def check(name,ok,detail=None):result['checks'][name]={'passed':bool(ok),'detail':detail}
+ try:
+  from playwright.sync_api import sync_playwright
+  with sync_playwright() as pw:
+   browser=pw.chromium.launch(channel=args.channel,headless=True)
+   context=browser.new_context(viewport={'width':1440,'height':1000},offline=True,accept_downloads=True)
+   page=context.new_page()
+   page.on('pageerror',lambda e:result['page_errors'].append(str(e)))
+   page.on('console',lambda m:result['console_errors'].append(m.text) if m.type=='error' else None)
+   page.on('request',lambda r:result['network_requests'].append(r.url) if r.url.startswith(('https:','http:')) else None)
+   page.on('requestfailed',lambda r:result['failed_requests'].append({'url':r.url,'failure':r.failure}))
+   page.goto(entry.as_uri(),wait_until='load');page.evaluate('document.fonts.ready');page.wait_for_timeout(300)
+   check('body_has_content',len(page.locator('body').inner_text())>100)
+   check('desktop_no_overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth'))
+   check('visible_images_loaded',page.evaluate("Array.from(document.images).filter(i=>i.currentSrc).every(i=>i.complete&&i.naturalWidth>0)"))
+   if args.starter:
+    page.wait_for_function('window.visualStudio && window.visualStudio.fontsReady===true')
+    check('declared_fonts_loaded',page.evaluate("!window.VISUAL_STUDIO.hasBundledFonts || ['AnthropicSerif','AnthropicSans','AnthropicMono'].every(f=>document.fonts.check('16px '+f))"))
+    check('hero_has_real_vector_paths',page.locator('#artwork svg path').count()>0)
+    page.screenshot(path=str(out/'desktop-initial.png'),full_page=True)
+    before=page.locator('#artwork').evaluate('(e)=>getComputedStyle(e).transform');page.wait_for_timeout(550);after=page.locator('#artwork').evaluate('(e)=>getComputedStyle(e).transform')
+    configured=page.evaluate('window.visualStudio.getState().motion')
+    check('motion_changes_or_is_explicitly_disabled',before!=after if configured!='none' else before==after,{'before':before,'after':after,'configured':configured})
+    if configured!='none':
+     page.locator('#motion-toggle').click();page.wait_for_timeout(300)
+     before=page.locator('#artwork').evaluate('(e)=>getComputedStyle(e).transform');page.wait_for_timeout(550);after=page.locator('#artwork').evaluate('(e)=>getComputedStyle(e).transform')
+     check('pause_stops_animation',before==after and page.evaluate('window.visualStudio.getState().paused'))
+     page.locator('#motion-toggle').click();page.wait_for_timeout(100)
+     before=page.locator('#artwork').evaluate('(e)=>getComputedStyle(e).transform');page.wait_for_timeout(450);after=page.locator('#artwork').evaluate('(e)=>getComputedStyle(e).transform')
+     check('resume_restarts_animation',before!=after)
+     box=page.locator('#hero-art').bounding_box();page.mouse.move(box['x']+box['width']*.8,box['y']+box['height']*.6);page.wait_for_timeout(400)
+     check('pointer_updates_art_position',page.locator('#hero-art').evaluate("e=>parseFloat(e.style.getPropertyValue('--px'))>0"))
+    page.locator('nav a[href="#playground"]').click();page.wait_for_timeout(700)
+    check('navigation_scrolls_to_section',page.evaluate("location.hash==='#playground'&&Math.abs(document.querySelector('#playground').getBoundingClientRect().top)<80"))
+    ids=[];shapes=[]
+    count=page.locator('[data-art]').count()
+    for i in range(count):
+     page.locator(f'[data-art="{i}"]').click();ids.append(page.evaluate('window.visualStudio.getState().selected'));shapes.append(page.locator('#artwork').inner_html())
+    check('all_illustrations_change_state_and_shapes',len(set(ids))==count and len(set(shapes))==count,ids)
+    before=page.locator('#artwork').inner_html();page.locator('[data-palette="1"]').click()
+    check('palette_changes_real_vector_fills',page.locator('#artwork').inner_html()!=before and page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()==='#7b8566'"))
+    page.locator('[data-palette="2"]').focus();page.keyboard.press('Enter')
+    check('keyboard_activates_palette',page.evaluate('window.visualStudio.getState().palette===2'))
+    check('palette_preserves_keyboard_focus',page.evaluate("document.activeElement.dataset.palette==='2'"))
+    with page.expect_download() as dl:page.locator('#export-svg').click()
+    download=dl.value;dest=out/download.suggested_filename;download.save_as(dest)
+    root=ET.parse(dest).getroot();check('download_is_real_editable_svg',root.tag.endswith('svg') and bool(root.findall('.//{http://www.w3.org/2000/svg}path')) and not root.findall('.//{http://www.w3.org/2000/svg}image'),{'file':dest.name,'bytes':dest.stat().st_size})
+    check('export_has_no_color_placeholders','__INK__' not in dest.read_text(encoding='utf-8') and '__PAPER__' not in dest.read_text(encoding='utf-8'))
+    page.locator('#show-source').click();page.locator('#source-image').evaluate("e=>e.decode()")
+    check('source_dialog_displays_real_original',page.locator('#source-dialog').evaluate('e=>e.open') and page.locator('#source-image').evaluate('e=>e.naturalWidth>0'))
+    page.keyboard.press('Escape');check('escape_closes_dialog',not page.locator('#source-dialog').evaluate('e=>e.open'))
+    check('dialog_restores_keyboard_focus',page.evaluate("document.activeElement.id==='show-source'"))
+    page.locator('[data-art="0"]').click();page.locator('[data-palette="0"]').click()
+    page.locator('nav a[href="#principles"]').click();page.wait_for_timeout(800)
+    check('scroll_reveals_design_notes',page.locator('#principles').evaluate("e=>Number(getComputedStyle(e).opacity)===1"))
+    page.locator('footer a[href="#main"]').click();page.wait_for_timeout(800)
+    page.screenshot(path=str(out/'desktop.png'),full_page=True)
+   else:page.screenshot(path=str(out/'desktop.png'),full_page=True)
+   for width in [390,360]:
+    page.set_viewport_size({'width':width,'height':844});page.evaluate("document.querySelectorAll('.reveal').forEach(e=>e.classList.add('is-visible'));scrollTo(0,0)");page.wait_for_timeout(500)
+    check(f'mobile_{width}_no_overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth'))
+    page.screenshot(path=str(out/f'mobile-{width}.png'),full_page=True)
+   if args.starter:
+    reduced=context.new_page();reduced.emulate_media(reduced_motion='reduce');reduced.goto(entry.as_uri());reduced.wait_for_function('window.visualStudio && window.visualStudio.fontsReady')
+    check('reduced_motion_disables_animation',reduced.locator('#artwork').evaluate("e=>getComputedStyle(e).animationName==='none'") and reduced.locator('#motion-toggle').is_disabled())
+    reduced.locator('[data-art="1"]').click();check('reduced_motion_preserves_interaction',reduced.evaluate("window.visualStudio.getState().selected===window.VISUAL_STUDIO.artworks[1].id"))
+    reduced.close()
+   check('no_javascript_errors',not result['page_errors'],result['page_errors']);check('no_console_errors',not result['console_errors'],result['console_errors']);check('no_failed_resources',not result['failed_requests'],result['failed_requests']);check('zero_network_requests',not result['network_requests'],result['network_requests'])
+   browser.close()
+ except Exception as exc:result['exception']=str(exc);check('runner_completed',False,str(exc))
+ result['passed']=bool(result['checks']) and all(c['passed'] for c in result['checks'].values())
+ (out/'verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+ print(json.dumps({'passed':result['passed'],'checks':len(result['checks']),'failures':{k:v for k,v in result['checks'].items() if not v['passed']},'report':str(out/'verification.json')},ensure_ascii=False,indent=2))
+ return 0 if result['passed'] else 1
+if __name__=='__main__':sys.exit(main())

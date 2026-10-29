@@ -1,0 +1,35 @@
+[
+  {
+    "id": "STUDIO-thought",
+    "prepared_derivative": true,
+    "original": "sources/STUDIO-thought.svg",
+    "original_sha256": "309ef0275774fe626b0b1801735cc27644db3f059e9729391f407905d8c2e210",
+    "source_url": null,
+    "source_page": null,
+    "license": "MIT — original project example",
+    "historical_version_verified": false,
+    "processing": "原创几何 SVG 示例 · MIT · 非 Anthropic 原作"
+  },
+  {
+    "id": "STUDIO-connection",
+    "prepared_derivative": true,
+    "original": "sources/STUDIO-connection.svg",
+    "original_sha256": "60d517f1025be340a5e0fa6644b1f78900a6491219bac6884ac98eceb6ff7280",
+    "source_url": null,
+    "source_page": null,
+    "license": "MIT — original project example",
+    "historical_version_verified": false,
+    "processing": "原创几何 SVG 示例 · MIT · 非 Anthropic 原作"
+  },
+  {
+    "id": "STUDIO-growth",
+    "prepared_derivative": true,
+    "original": "sources/STUDIO-growth.svg",
+    "original_sha256": "e6c42f442c97c166af65c0988fa4e87e5e996f086bf1889966867bb5cb7877b5",
+    "source_url": null,
+    "source_page": null,
+    "license": "MIT — original project example",
+    "historical_version_verified": false,
+    "processing": "原创几何 SVG 示例 · MIT · 非 Anthropic 原作"
+  }
+]
